@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Feliz Cumpleaños</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    /* ========== VIDEO DE FONDO ========== */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /* ========== PANTALLA INICIAL (HERO) ========== */
+    .hero {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Pastel 3D con caída */
+    .cake-3d {
+      position: relative;
+      width: 260px;
+      height: 240px;
+      perspective: 900px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease;
+      animation: cakeDrop 1.3s ease-out forwards;
+      transform: translateY(-120%);
+    }
+
+    .cake-3d:hover {
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    @keyframes cakeDrop {
+      0% { transform: translateY(-120%); }
+      75% { transform: translateY(10%); }
+      100% { transform: translateY(0); }
+    }
+
+    .cake-3d-inner {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) rotateX(18deg);
+      width: 230px;
+      height: 150px;
+      transform-style: preserve-3d;
+      animation: rotateCake 12s linear infinite;
+    }
+
+    .cake-layer {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 230px;
+      height: 70px;
+      background: #ffe0b2;
+      border-radius: 50%;
+      box-shadow: 0 18px 0 #ffb74d;
+      overflow: hidden;
+    }
+
+    .cake-layer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, #ff8a80 25%, transparent 26%);
+      background-size: 26px 26px;
+      opacity: 0.7;
+    }
+
+    .cake-layer.top {
+      width: 170px;
+      height: 50px;
+      bottom: 80px;
+      box-shadow: 0 14px 0 #ffb74d;
+    }
+
+    .cake-layer.bottom {
+      bottom: 10px;
+    }
+
+    .cake-plate {
+      position: absolute;
+      width: 300px;
+      height: 50px;
+      background: radial-gradient(circle at 50% 50%, #ffffff, #e0e0e0);
+      border-radius: 50%;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+    }
+
+    .cake-candles {
+      position: absolute;
+      bottom: 115px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 18px;
+    }
+
+    .cake-candle {
+      width: 12px;
+      height: 40px;
+      border-radius: 999px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff,
+        #fff 4px,
+        #ff8a80 4px,
+        #ff8a80 8px
+      );
+      position: relative;
+    }
+
+    .cake-candle::after {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff9c4, #ffb300);
+      box-shadow: 0 0 18px rgba(255, 193, 7, 0.9);
+      animation: candleFlame 0.5s infinite alternate;
+    }
+
+    @keyframes rotateCake {
+      from { transform: translateX(-50%) rotateY(0deg) rotateX(18deg); }
+      to   { transform: translateX(-50%) rotateY(360deg) rotateX(18deg); }
+    }
+
+    @keyframes candleFlame {
+      from { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.9; }
+      to   { transform: translateX(-50%) translateY(-2px) scale(1.1); opacity: 1; }
+    }
+
+    .tap-text {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 6px 14px;
+      border-radius: 999px;
+      display: inline-block;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    /* ========== CONTENIDO INTERIOR ========== */
+    .inner-content {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 16px 60px;
+      gap: 22px;
+      color: #fff;
+      text-align: center;
+      overflow-y: auto;
+    }
+
+    .inner-content.show {
+      display: flex;
+      animation: fadeInUp 0.7s ease forwards;
+    }
+
+    .inner-title {
+      font-size: 2rem;
+      color: #fff;
+      text-align: center;
+      margin-top: 10px;
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .small-text {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #fff;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+      line-height: 1.5;
+      max-width: 480px;
+    }
+
+    /* ========== SLIDER MANUAL DE IMÁGENES ========== */
+    .gallery {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .gallery-track {
+      display: flex;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .gallery-item {
+      min-width: 100%;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.4rem;
+      z-index: 2;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .gallery-btn:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .gallery-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .gallery-btn.prev {
+      left: 10px;
+    }
+
+    .gallery-btn.next {
+      right: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .cake-3d {
+        transform: scale(0.9);
+      }
+      .gallery-item img {
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- VIDEO DE FONDO -->
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="holo.mp4" type="video/mp4" />
+  </video>
+
+  <!-- PANTALLA INICIAL CON PASTEL -->
+  <section class="hero" id="hero">
+    <h1>¡Feliz Cumpleaños! 🎉</h1>
+
+    <div class="cake-3d" id="cake">
+      <div class="cake-plate"></div>
+      <div class="cake-3d-inner">
+        <div class="cake-layer bottom"></div>
+        <div class="cake-layer top"></div>
+        <div class="cake-candles">
+          <div class="cake-candle"></div>
+          <div class="cake-candle"></div>
+          <div class="cake-candle"></div>
+        </div>
+      </div>
+    </div>
+
+    <span class="tap-text">Toca el pastel para ver la sorpresa</span>
+  </section>
+
+  <!-- CONTENIDO INTERIOR -->
+  <section class="inner-content" id="innerContent">
+    <h2 class="inner-title">¡Esta es tu sorpresa! 🎂</h2>
+
+    <p class="small-text">
+      Wuao, por donde empezar , feliz cumpleaños vale , espero que lo hayas pasado bien cuando ya hayas leido esto jeje 
+    eres alguien increible , no cambies por nadie en el mundo , eres alguien especial en mi vida y siempre trato de buscar tu felicidad 
+    , espero que este nuevo año de vida te traiga muchas bendiciones , salud , amor y sobre todo mucha felicidad , te mereces lo mejor del mundo
+    gracias por aparecer en mi camino , todos los momentos divertidos que pasamos y no niego que hayamos pasado moentos triste pero cero que al final 
+    eso refuerza nuestra amistad , espero que podamos seguir disfrutando de mas cumpleaños juntos , felices 20 vale =) 
+    pdt: necesitasmos tener fotos juntos ajajaja no tenemos , desde ahora tomare mas foto cada vez que salimos , por ahora pondre 
+    a pocoyo =) jeje
+    </p>
+
+    <div class="gallery" id="gallery">
+      <button class="gallery-btn prev" id="prevBtn">&#10094;</button>
+      <button class="gallery-btn next" id="nextBtn">&#10095;</button>
+
+      <div class="gallery-track" id="galleryTrack">
+        <div class="gallery-item">
+          <img src="channels4_profile.jpg" alt="=)" />
+        </div>
+        <div class="gallery-item">
+          <img src="images.jpg" alt="=)" />
+        </div>
+        <div class="gallery-item">
+          <img src="55c2bb37e7b54f0965341afe7430257b.jpg" alt="=)" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Audio de fondo oculto -->
+  <audio id="bgMusic" src="Coldplay X BTS - My Universe (Official Lyric Video).mp3" loop></audio>
+
+  <script>
+    const hero = document.getElementById("hero");
+    const cake = document.getElementById("cake");
+    const innerContent = document.getElementById("innerContent");
+    const bgMusic = document.getElementById("bgMusic");
+
+    cake.addEventListener("click", () => {
+      hero.style.display = "none";
+      innerContent.classList.add("show");
+
+      if (bgMusic) {
+        bgMusic.play().catch(() => {});
+      }
+    });
+
+    // Slider manual
+    const track = document.getElementById("galleryTrack");
+    const slides = document.querySelectorAll(".gallery-item");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    let currentSlide = 0;
+
+    function updateSlider() {
+      const offset = -currentSlide * 100;
+      track.style.transform = `translateX(${offset}%)`;
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateSlider();
+    });
+
+    prevBtn.addEventListener("click", () => {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateSlider();
+    });
+
+    // Opcional: permitir arrastrar con touch/mouse simple
+    let startX = null;
+
+    track.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    track.addEventListener("touchend", (e) => {
+      if (startX === null) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          currentSlide = (currentSlide + 1) % slides.length;
+        } else {
+          currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        }
+        updateSlider();
+      }
+      startX = null;
+    });
+  </script>
+</body>
+</html>
+
